@@ -1389,6 +1389,11 @@ class StableDiffusionControlNetInpaintPipeline(
                     control_model_input = latent_model_input
                     controlnet_prompt_embeds = prompt_embeds
 
+                # Modified by Zitian
+                if num_channels_unet == 9:
+                    control_model_input = torch.cat([latent_model_input, mask, masked_image_latents], dim=1)
+                    control_model_input = self.scheduler.scale_model_input(control_model_input, t)
+
                 if isinstance(controlnet_keep[i], list):
                     cond_scale = [c * s for c, s in zip(controlnet_conditioning_scale, controlnet_keep[i])]
                 else:
